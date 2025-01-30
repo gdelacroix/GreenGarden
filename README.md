@@ -5,7 +5,7 @@
 ### Création de la base de données
 Avant de lancer le projet, il est nécessaire d'initialiser la base de données. Pour cela, suivez les étapes ci-dessous :
 
-1. Créez une base de données nommée `greengarden`.
+1. Créez une base de données MySQL nommée `greengarden`.
 2. Exécutez le script `greengarden (1).sql` pour initialiser la structure et les données de la base.
 
 ### Utilisateurs de la base de données
