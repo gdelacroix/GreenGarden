@@ -2,19 +2,10 @@
 include('header.php');
 ?>
 <?php
-// Configuration de la base de données
-$host = '127.0.0.1';
-$dbname = 'greengarden';
-$username = 'root';
-$password = '';
 
-try {
-    // Connexion à la base de données
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
-}
+
+
+
 
 // Initialisation des variables
 $search = isset($_GET['search']) ? $_GET['search'] : '';
@@ -25,7 +16,8 @@ $sql = "SELECT
             c.Libelle AS Categorie, 
             f.Nom_fournisseur AS Fournisseur,
             p.Prix_Achat, p.Taux_TVA,
-            (p.Prix_Achat + (p.Prix_Achat * p.Taux_TVA / 100)) AS Prix_TTC
+            (p.Prix_Achat + (p.Prix_Achat * p.Taux_TVA / 100)) AS Prix_TTC,
+            p.Slug
         FROM t_d_produit p
         INNER JOIN t_d_categorie c ON p.Id_Categorie = c.Id_Categorie
         INNER JOIN t_d_fournisseur f ON p.Id_Fournisseur = f.Id_Fournisseur";
@@ -56,20 +48,22 @@ $products = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         <?php if (count($products) > 0): ?>
             <?php foreach ($products as $product): ?>
                 <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="images/<?= htmlentities($product['Photo']) ?>"
-                            class="card-img-top" alt="<?= htmlentities($product['Nom_court']) ?>" 
-                            style="height: 200px; object-fit: cover;"  onerror="this.onerror=null; this.src='images/erreur.webp';">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= htmlentities($product['Nom_court']) ?></h5>
-                            <p class="card-text"><strong>Catégorie :</strong>
-                                <?= htmlentities($product['Categorie']) ?></p>
-                            <p class="card-text"><strong>Fournisseur :</strong>
-                                <?= htmlentities($product['Fournisseur']) ?></p>
-                            <p class="card-text"><strong>Prix TTC :</strong>
-                                <?= number_format($product['Prix_TTC'], 2, ',', ' ') ?> €</p>
+                    <a href="produit.php?slug=<?= urlencode($product['Slug']) ?>" class="text-decoration-none">
+                        <div class="card">
+                            <img src="images/<?= htmlentities($product['Photo']) ?>"
+                                class="card-img-top" alt="<?= htmlentities($product['Nom_court']) ?>"
+                                style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.src='images/erreur.webp';">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= htmlentities($product['Nom_court']) ?></h5>
+                                <p class="card-text"><strong>Catégorie :</strong>
+                                    <?= htmlentities($product['Categorie']) ?></p>
+                                <p class="card-text"><strong>Fournisseur :</strong>
+                                    <?= htmlentities($product['Fournisseur']) ?></p>
+                                <p class="card-text"><strong>Prix TTC :</strong>
+                                    <?= number_format($product['Prix_TTC'], 2, ',', ' ') ?> €</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>

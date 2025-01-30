@@ -1,5 +1,5 @@
-<footer>
-    <div class="">
+<footer style="background-color: #2d6a4f; color: white; padding: 20px; text-align: center; ">
+    <div style="max-width: 1200px; margin: auto;display: flex;">
         <!-- Section 1 : Description -->
         <div style="margin-bottom: 20px;">
             <h4 style="margin-bottom: 10px;">GreenGarden</h4>
