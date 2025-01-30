@@ -1,6 +1,11 @@
 <?php
 include('header.php');
-
+// Vérifier si l'utilisateur est commercial ou admin: renvoie un booléen
+$isCommercialOrAdmin = isset($_SESSION['user_type']) && in_array($_SESSION['user_type'], ['Commercial', 'Admin']);
+if (!$isCommercialOrAdmin){
+    header('Location:index.php'); // Redirection vers la page d'accueil
+    exit();
+}
 
 // Initialisation des variables
 $search = isset($_GET['search']) ? $_GET['search'] : '';

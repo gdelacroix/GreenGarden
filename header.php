@@ -1,3 +1,7 @@
+<?php
+ session_start(); // Démarrer la session
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,8 +21,9 @@
 
 <body>
     <?php
-
-    session_start(); // Démarrer la session
+    if (!isset($_SESSION['Panier'])) {
+        $_SESSION['Panier'] = [];
+    }
 
     // Configuration de la base de données
     $host = '127.0.0.1';
@@ -52,6 +57,14 @@
 
     // Vérifier si l'utilisateur est commercial ou admin
     $isCommercialOrAdmin = isset($_SESSION['user_type']) && in_array($_SESSION['user_type'], ['Commercial', 'Admin']);
+    $estConnecte = isset($_SESSION['logged_in']) && $_SESSION['logged_in']==true ; // Vérifie si une session utilisateur existe
+    // Initialiser le panier si nécessaire
+    if (!isset($_SESSION['Panier'])) {
+        $_SESSION['Panier'] = [];
+    }
+
+    // Obtenir le total des quantités
+    $totalQuantity = array_sum(array_column($_SESSION['Panier'], 'quantity'));
     ?>
     <nav class="navbar navbar-expand-lg 
     <?php
@@ -73,6 +86,7 @@
         echo 'bg-body-tertiary'; // Couleur par défaut si non connecté
     }
     ?>">
+
         <div class="container-fluid">
             <a class="navbar-brand" href="#">GreenGarden</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,6 +115,12 @@
                             </ul>
                         </li>
                     <?php endif; ?>
+                    <li class="nav-item">
+
+                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#cartModal">
+                            Panier (<span id="cart-count"><?= isset($_SESSION['Panier']) ? array_sum(array_column($_SESSION['Panier'], 'quantite')) : 0 ?></span>)
+                        </button>
+                    </li>
                 </ul>
                 <div class="d-flex">
                     <?php if ($username): ?>
@@ -118,3 +138,73 @@
             </div>
         </div>
     </nav>
+    <!-- Modal -->
+    <!-- Modal du panier -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Votre panier</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <?php if (!empty($_SESSION['Panier'])): ?>
+                        <ul class="list-group">
+                            <?php foreach ($_SESSION['Panier'] as $produit): ?>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <strong><?= htmlspecialchars($produit['libelle']) ?></strong><br>
+                                        Prix TTC: <?= number_format($produit['prix'], 2) ?> €
+                                    </span>
+                                    <div>
+
+                                        <!-- Formulaire pour décrémenter -->
+                                        <form action="panier.php" method="POST" style="display:inline;">
+                                            <input type="hidden" name="action" value="decrementer">
+                                            <input type="hidden" name="slug" value="<?= $produit['slug'] ?>">
+                                            <button type="submit" class="btn btn-warning btn-sm">-</button>
+                                        </form>
+
+                                        <?= $produit['quantite'] ?>
+                                        <!-- Formulaire pour incrémenter -->
+                                        <form action="panier.php" method="POST" style="display:inline;">
+                                            <input type="hidden" name="action" value="incrementer">
+                                            <input type="hidden" name="slug" value="<?= $produit['slug'] ?>">
+                                            <button type="submit" class="btn btn-success btn-sm">+</button>
+                                        </form>
+
+                                        <!-- Formulaire pour supprimer -->
+                                        <form action="panier.php" method="POST" style="display:inline;">
+                                            <input type="hidden" name="action" value="supprimer">
+                                            <input type="hidden" name="slug" value="<?= $produit['slug'] ?>">
+                                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <p class="mt-3 text-end">
+                            <strong>Total: </strong>
+                            <?= number_format(array_sum(array_map(fn($p) => $p['prix'] * $p['quantite'], $_SESSION['Panier'])), 2) ?> €
+                        </p>
+
+                        <!-- Formulaire pour vider le panier -->
+                        <form action="panier.php" method="POST" class="text-end">
+                            <input type="hidden" name="action" value="vider">
+                            <button type="submit" class="btn btn-danger">Vider le panier</button>
+                        </form>
+
+                        <?php if ($estConnecte): ?>
+                            <!-- Bouton pour passer la commande si l'utilisateur est connecté -->
+                            <a href="commande.php" class="btn btn-primary">Passer la commande</a>
+                        <?php else: ?>
+                            <!-- Message si l'utilisateur n'est pas connecté -->
+                            <p class="text-danger">Vous devez être connecté pour passer une commande.</p>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <p>Votre panier est vide.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>

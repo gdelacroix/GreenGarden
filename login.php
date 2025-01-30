@@ -1,12 +1,14 @@
-
-<?php include 'header.php' ?>
+<?php include 'header.php' ;
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+?>
 <?php
 
 
 // Vérification si l'utilisateur est déjà connecté
 if (isset($_SESSION['user_id'])) {
-	header('Location: index.php'); // Redirection vers la page d'accueil si l'utilisateur est déjà connecté
-	exit();
+	header('Location:index.php'); // Redirection vers la page d'accueil si l'utilisateur est déjà connecté
+
 }
 
 // Traitement de la soumission du formulaire de connexion
@@ -22,19 +24,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 	if ($user && password_verify($password, $user['Password'])) {
-		// Connexion réussie, stockage de l'identifiant de l'utilisateur dans la variable de session
-		$_SESSION['user_id'] = $user['Id_User'];
+		try {
+			// Connexion réussie, stockage de l'identifiant de l'utilisateur dans la variable de session
+			$_SESSION['user_id'] = $user['Id_User'];
 
 
-		//recup le type d'utilisateur pour renseigner la variable de session user_type
-		$stmt = $pdo->prepare("SELECT * FROM t_d_usertype WHERE Id_UserType=:typeuser");
-		$stmt->bindValue(':typeuser', $user['Id_UserType']);
-		$stmt->execute();
-		$usert = $stmt->fetch(PDO::FETCH_ASSOC);
-		$_SESSION['user_type']	= $usert['Libelle'];
-		$_SESSION['logged_in'] = true;
-		header('Location: index.php'); // Redirection vers la page d'accueil
-		exit();
+			//code...
+			//recup le type d'utilisateur pour renseigner la variable de session user_type
+			$stmt = $pdo->prepare("SELECT * FROM t_d_usertype WHERE Id_UserType=:typeuser");
+			$stmt->bindValue(':typeuser', $user['Id_UserType']);
+			$stmt->execute();
+			$usert = $stmt->fetch(PDO::FETCH_ASSOC);
+			$_SESSION['user_type']	= $usert['Libelle'];
+			$_SESSION['logged_in'] = true;
+			//header('Location:index.php'); // Redirection vers la page d'accueil
+			echo '<meta http-equiv="refresh" content="0;url=index.php">';
+			exit();
+		} catch (\Throwable $th) {
+			//header('Location:index.php'); // Redirection vers la page d'accueil
+			echo '<meta http-equiv="refresh" content="0;url=index.php">';
+			exit();
+		}
 	} else {
 		// Identifiants incorrects, affichage d'un message d'erreur
 		$error_message = "Email ou mot de passe incorrect.";

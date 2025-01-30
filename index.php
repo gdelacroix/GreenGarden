@@ -3,10 +3,6 @@ include('header.php');
 ?>
 <?php
 
-
-
-
-
 // Initialisation des variables
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
@@ -29,7 +25,11 @@ if (!empty($search)) {
 
 // Exécution de la requête
 $products = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+
+
 ?>
+
 
 <div class="container my-5">
     <h1 class="mb-4">Liste des produits</h1>
@@ -61,6 +61,19 @@ $products = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                                     <?= htmlentities($product['Fournisseur']) ?></p>
                                 <p class="card-text"><strong>Prix TTC :</strong>
                                     <?= number_format($product['Prix_TTC'], 2, ',', ' ') ?> €</p>
+
+                                <form method='POST' action='panier.php' class='add-to-cart-form' data-slug="<?= $product['Slug'] ?>"
+                                data-libelle="<?= htmlentities($product['Nom_court']) ?>"
+                                data-prix="<?= $product['Prix_TTC'] ?>"
+                                >
+                                    <input type='hidden' name='action' value='ajouter'>
+                                    <input type='hidden' name='slug' value="<?= $product['Slug'] ?>">
+                                    <input type='hidden' name='libelle' value="<?= htmlentities($product['Nom_court']) ?>">
+                                    <input type='hidden' name='prix' value="<?= $product['Prix_TTC'] ?>">
+                                    <button type='submit' class='btn btn-primary'>Ajouter au panier</button>
+                                </form>
+
+                            
                             </div>
                         </div>
                     </a>

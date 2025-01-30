@@ -1,6 +1,11 @@
 <?php
-include("header.php");
 
+include("header.php");
+$isCommercialOrAdmin = isset($_SESSION['user_type']) && in_array($_SESSION['user_type'], ['Commercial', 'Admin']);
+if (!$isCommercialOrAdmin){
+    header('Location: index.php'); // Redirection vers la page d'accueil
+    exit();
+}
 // Initialisation des variables
 $slug = isset($_GET['slug']) ? $_GET['slug'] : '';
 $libelle = $slugValue = '';
@@ -18,14 +23,16 @@ if ($slug !== '') {
         $idCategorie = $category['Id_Categorie']; // On récupère l'ID de la catégorie
     } else {
         echo "Catégorie introuvable.";
-        exit;
-    }
-}
+            exit;
+        }
+  
 
-// Traitement du formulaire de création/modification
+
+    }
+    // Traitement du formulaire de création/modification
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $libelle = $_POST['libelle'];
-    $slug = $_POST['slug']; // Vous pouvez ajouter la logique pour générer le slug ici si nécessaire
+   
     
     // Si un slug est fourni (modification), on effectue une mise à jour, sinon une insertion
     if ($idCategorie !== null) {
@@ -41,9 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Redirection après la soumission du formulaire
     header('Location: categories.php');
     exit;
-
+}
 ?>
-
 
 <div class="container my-5">
     <h1 class="mb-4"><?= $slug ? "Modifier" : "Créer" ?> une catégorie</h1>
@@ -58,5 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </form>
 </div>
 <?php
+
 include("footer.php");
 ?>
