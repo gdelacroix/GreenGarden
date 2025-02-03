@@ -1,4 +1,4 @@
-<?php include 'header.php' ;
+<?php include 'include/header.php' ;
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 ?>
@@ -53,16 +53,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 
-<h1>Connexion</h1>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-lg" style="width: 400px;">
+        <h2 class="text-center mb-4">Connexion</h2>
 <?php if (isset($error_message)) : ?>
-	<p><?php echo $error_message; ?></p>
+	<div class="alert alert-danger" role="alert">
+                <?php echo $error_message; ?>
+            </div>
 <?php endif; ?>
 <form method="POST">
-	<label for="login">Login :</label>
-	<input type="login" id="login" name="login" required><br>
-	<label for="password">Mot de passe :</label>
-	<input type="password" id="password" name="password" required><br>
-	<input type="submit" value="Se connecter">
+<div class="mb-3">
+	<label for="login" class="form-label">Login :</label>
+	<input type="login" id="login" name="login" class="form-control" required>
+	</div>
+	<div class="mb-3">
+	<label for="password" class="form-label">Mot de passe :</label>
+	<input type="password" id="password" name="password" class="form-control"  required>
+	</div>
+	<input type="submit" value="Se connecter" class="btn btn-primary w-100">
 </form>
-<p>Pas encore inscrit ? <a href="inscription.php">S'inscrire</a></p>
-<?php include 'footer.php' ?>
+<p class="mt-3 text-center">Pas encore inscrit ? <a href="inscription.php">S'inscrire</a></p>
+    </div>
+</div>
+<?php include 'include/footer.php' ?>

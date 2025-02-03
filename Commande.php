@@ -1,4 +1,4 @@
-<?php include('header.php');
+<?php include('include/header.php');
 // Récupérer les informations du client si connecté
 $Utilisateur = $_SESSION['user_id'] ?? null;
 
@@ -384,5 +384,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     <?php
-    include('footer.php');
+    include('include/footer.php');
     ?>

@@ -1,5 +1,5 @@
 <?php
-include('header.php');
+include('include/header.php');
 ?>
 <?php
 
@@ -84,6 +84,6 @@ unset($_SESSION['commandeId']);
 
 
 <?php
-include('footer.php');
+include('include/footer.php');
 
 ?>

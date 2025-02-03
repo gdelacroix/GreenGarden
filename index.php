@@ -1,30 +1,46 @@
 <?php
-include('header.php');
+include('include/header.php');
+require 'Classes/ProduitClass.php';
+require 'Classes/CategorieClass.php';
+require 'Classes/FournisseurClass.php';
 ?>
 <?php
 
 // Initialisation des variables
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Requête SQL pour récupérer les produits
-$sql = "SELECT 
-            p.Id_Produit, p.Nom_court, p.Photo, 
-            c.Libelle AS Categorie, 
-            f.Nom_fournisseur AS Fournisseur,
-            p.Prix_Achat, p.Taux_TVA,
-            (p.Prix_Achat + (p.Prix_Achat * p.Taux_TVA / 100)) AS Prix_TTC,
-            p.Slug
-        FROM t_d_produit p
-        INNER JOIN t_d_categorie c ON p.Id_Categorie = c.Id_Categorie
-        INNER JOIN t_d_fournisseur f ON p.Id_Fournisseur = f.Id_Fournisseur";
+// Création d'une instance de la classe Produit
+$produitManager = new Produit();
+// Création d'une instance de la classe Categorie
+$categorieManager = new Categorie();
+// Création d'une instance de la classe Fournisseur
+$fournisseurManager = new Fournisseur();
 
-// Ajout du filtre de recherche si applicable
-if (!empty($search)) {
-    $sql .= " WHERE p.Nom_court LIKE '%$search%'";
+// // Requête SQL pour récupérer les produits
+// $sql = "SELECT 
+//             p.Id_Produit, p.Nom_court, p.Photo, 
+//             c.Libelle AS Categorie, 
+//             f.Nom_fournisseur AS Fournisseur,
+//             p.Prix_Achat, p.Taux_TVA,
+//             (p.Prix_Achat + (p.Prix_Achat * p.Taux_TVA / 100)) AS Prix_TTC,
+//             p.Slug
+//         FROM t_d_produit p
+//         INNER JOIN t_d_categorie c ON p.Id_Categorie = c.Id_Categorie
+//         INNER JOIN t_d_fournisseur f ON p.Id_Fournisseur = f.Id_Fournisseur";
+
+// // Ajout du filtre de recherche si applicable
+// if (!empty($search)) {
+//     $sql .= " WHERE p.Nom_court LIKE '%$search%'";
+// }
+
+
+
+// Récupération des produits avec ou sans recherche
+if (empty($search)) {
+    $products = $produitManager->getAllProduits(); // Si nécessaire, implémentez une méthode de recherche dans ProduitClass
+} else {
+    $products = $produitManager->getProduitsForSearch($search);
 }
-
-// Exécution de la requête
-$products = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -45,35 +61,53 @@ $products = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Liste des produits -->
     <div class="row">
-        <?php if (count($products) > 0): ?>
+          <?php
+        if (count($products) > 0): ?>
             <?php foreach ($products as $product): ?>
+                <?php  $product->getSlug()  ?>
                 <div class="col-md-4 mb-4">
-                    <a href="produit.php?slug=<?= urlencode($product['Slug']) ?>" class="text-decoration-none">
+                    <a href="produit.php?slug=<?= urlencode($product->getSlug()) ?>" class="text-decoration-none">
                         <div class="card">
-                            <img src="images/<?= htmlentities($product['Photo']) ?>"
-                                class="card-img-top" alt="<?= htmlentities($product['Nom_court']) ?>"
+                            <img src="images/<?= htmlentities($product->getPhoto()) ?>"
+                                class="card-img-top" alt="<?= htmlentities($product->getNom_court()) ?>"
                                 style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.src='images/erreur.webp';">
                             <div class="card-body">
-                                <h5 class="card-title"><?= htmlentities($product['Nom_court']) ?></h5>
+                                <h5 class="card-title"><?= htmlentities($product->getNom_court()) ?></h5>
                                 <p class="card-text"><strong>Catégorie :</strong>
-                                    <?= htmlentities($product['Categorie']) ?></p>
+                                    <?php
+                                    $categorie = $categorieManager->getCategorieById($product->getId_Categorie());
+                                    if (is_object($categorie[0])) {
+                                        echo htmlentities($categorie[0]->getLibelle());
+                                    } else {
+                                        echo 'Catégorie inconnue';
+                                    }
+                                    ?>
                                 <p class="card-text"><strong>Fournisseur :</strong>
-                                    <?= htmlentities($product['Fournisseur']) ?></p>
+                                    <?php
+                                    
+                                    $fournisseur = $fournisseurManager->getFournisseurById($product->getId_Fournisseur());
+                                   // echo $fournisseur->getNom_Fournisseur();
+                                    if (is_object($fournisseur[0])) {
+                                        echo htmlentities($fournisseur[0]->getNom_Fournisseur());
+                                    } else {
+                                        echo 'Fournisseur inconnu';
+                                    }
+                                    
+                                    ?></p>
                                 <p class="card-text"><strong>Prix TTC :</strong>
-                                    <?= number_format($product['Prix_TTC'], 2, ',', ' ') ?> €</p>
+                                    <?= number_format($product->getPrixTTC(), 2, ',', ' ') ?> €</p>
 
-                                <form method='POST' action='panier.php' class='add-to-cart-form' data-slug="<?= $product['Slug'] ?>"
-                                data-libelle="<?= htmlentities($product['Nom_court']) ?>"
-                                data-prix="<?= $product['Prix_TTC'] ?>"
-                                >
+                                <form method='POST' action='panier.php' class='add-to-cart-form' data-slug="<?= $product->getSlug() ?>"
+                                    data-libelle="<?= htmlentities($product->getNom_court()) ?>"
+                                    data-prix="<?=$product->getPrixTTC() ?>">
                                     <input type='hidden' name='action' value='ajouter'>
-                                    <input type='hidden' name='slug' value="<?= $product['Slug'] ?>">
-                                    <input type='hidden' name='libelle' value="<?= htmlentities($product['Nom_court']) ?>">
-                                    <input type='hidden' name='prix' value="<?= $product['Prix_TTC'] ?>">
+                                    <input type='hidden' name='slug' value="<?= $product->getSlug() ?>">
+                                    <input type='hidden' name='libelle' value="<?= $product->getNom_court() ?>">
+                                    <input type='hidden' name='prix' value="<?= $product->getPrixTTC() ?>">
                                     <button type='submit' class='btn btn-primary'>Ajouter au panier</button>
                                 </form>
 
-                            
+
                             </div>
                         </div>
                     </a>
@@ -88,5 +122,5 @@ $products = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <?php
-include('footer.php');
+include('include/footer.php');
 ?>

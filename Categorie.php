@@ -1,6 +1,6 @@
 <?php
 
-include("header.php");
+include("include/header.php");
 $isCommercialOrAdmin = isset($_SESSION['user_type']) && in_array($_SESSION['user_type'], ['Commercial', 'Admin']);
 if (!$isCommercialOrAdmin){
     header('Location: index.php'); // Redirection vers la page d'accueil
@@ -65,5 +65,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 <?php
 
-include("footer.php");
+include("include/footer.php");
 ?>
