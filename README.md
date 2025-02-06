@@ -53,6 +53,10 @@ Chacun de ces utilisateurs a un mot de passe identique à son identifiant.
 - Création des classes `Produit`, `Categorie` et `Fournisseur`.
 - Intégration de la POO dans les pages `index.php`, `Produit.php`, `Categorie.php` et `Commande.php`.
 
+### Partie 5 - Mise en place MVC (Model View Controller)
+**Commit:** `acf18cd64cac2fe2cbaec6cab3134c64bf010e56`
+- Implémentation d'une architecture MVC pour la partie Produit, Categorie et Fournisseur.
+
 ## Remarque
 Si vous rencontrez des problèmes de connexion à la base de données, assurez-vous que les utilisateurs et leurs mots de passe sont bien configurés et ont les permissions nécessaires sur la base `greengarden`.
 
