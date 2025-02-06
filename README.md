@@ -47,7 +47,7 @@ Chacun de ces utilisateurs a un mot de passe identique à son identifiant.
 - Création du processus de commande finale.
 
 ### Partie 4 - Refactorisation en POO
-**Commit:** `jkl1121`
+**Commit:** `c70f89aea8bef552b95afced77eb8eabdde67d12`
 - Implémentation d'une architecture orientée objet.
 - Création d'une classe `dao` pour gérer les requêtes SQL.
 - Création des classes `Produit`, `Categorie` et `Fournisseur`.

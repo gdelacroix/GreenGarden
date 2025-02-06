@@ -1,5 +1,5 @@
 <?php
-require_once 'require/dao.php';
+require_once 'dao.php';
 
 class Categorie
 {
@@ -53,17 +53,35 @@ class Categorie
 
    
 
-    public static function getAllCategories()
+    public static function getAllCategories($search = '')
     {
         $params = array();
         $dao = new dao("localhost", "greengarden");
-        return $dao->select("t_d_categorie", "", $params, "Libelle","","Categorie");
+        if (!empty($search)) {
+            $params = array(
+                ':slug' => $search
+            );
+            $categories = $dao->select("t_d_categorie", "Slug = :slug", $params, "Libelle","","Categorie");
+
+        }
+        else{
+            $categories = $dao->select("t_d_categorie", "", $params, "Libelle","","Categorie");
+
+        }
+       
+        // $categories = [];
+        // foreach ($result as $row) {
+        //     $categorie = new self();
+        //     $categorie->setId_Categorie($row['Id_Categorie']);
+        //     $categorie->setLibelle($row['Libelle']);
+        //     $categories[] = $categorie;
+        // }
+
+        return $categories;
     }
 
     public function insertCategorie() {
-        /* $sql = "INSERT INTO t_d_categorie (Libelle) VALUES ('$libelle')";*/
-
-        //     
+        var_dump($this->getLibelle()); // Vérifie si la valeur est bien récupérée
         $values = array(
             'Libelle' => $this->getLibelle()
         );
@@ -84,8 +102,8 @@ class Categorie
 
     public function deleteCategorie()
     {
-        $where = 'Id_Categorie = ?';
-        $params = [$this->getId_Categorie()]; // ID du produit à mettre à jour
+        $where = 'Slug = ?';
+        $params = [$this->getSlug()]; // ID du produit à mettre à jour
        
         return $this->dao->delete('t_d_categorie',$where,$params);
     }

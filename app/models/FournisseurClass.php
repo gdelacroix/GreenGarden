@@ -1,5 +1,5 @@
 <?php
-require_once 'require/dao.php';
+require_once 'dao.php';
 
 class Fournisseur {
     private $dao;
@@ -34,7 +34,17 @@ class Fournisseur {
     public static function getAllFournisseurs() {
         $params = array();
         $dao = new dao("localhost", "greengarden");
-        return $dao->select("t_d_fournisseur", "", $params, "Nom_Fournisseur","","Fournisseur");
+        $fournisseurs =  $dao->select("t_d_fournisseur", "", $params, "Nom_Fournisseur","","Fournisseur");
+    
+        // $fournisseurs = [];
+        // foreach ($result as $row) {
+        //     $fournisseur = new self();
+        //     $fournisseur->setId_Fournisseur($row['Id_Fournisseur']);
+        //     $fournisseur->setNom_Fournisseur($row['Nom_Fournisseur']);
+        //     $fournisseurs[] = $fournisseur;
+        // }
+
+        return $fournisseurs;
     }
 
     // Récupérer un fournisseur par ID

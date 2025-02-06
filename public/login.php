@@ -1,4 +1,4 @@
-<?php include 'include/header.php' ;
+<?php include '../include/header.php' ;
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 ?>
@@ -75,4 +75,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <p class="mt-3 text-center">Pas encore inscrit ? <a href="inscription.php">S'inscrire</a></p>
     </div>
 </div>
-<?php include 'include/footer.php' ?>
+<?php include '../include/footer.php' ?>

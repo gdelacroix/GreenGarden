@@ -1,5 +1,5 @@
 <?php
-require_once 'require/dao.php';
+require_once 'dao.php';
 
 class Produit
 {
@@ -56,7 +56,7 @@ class Produit
         $params = array(
             ':id' => $id
         );
-        return $this->dao->select("t_d_produit", "id_produit = :id", $params)[0];
+        return $this->dao->select("t_d_produit", "id_produit = :id", $params)[0]?? null;
     }
 
     public function getProduitBySlug($slug)
@@ -64,7 +64,7 @@ class Produit
         $params = array(
             ':slug' => $slug
         );
-        return $this->dao->select("t_d_produit", "Slug = :slug", $params,'','','Produit')[0];
+        return $this->dao->select("t_d_produit", "Slug = :slug", $params,'','','Produit')[0]?? null;
     }
 
     public function getProduitsForSearch($search)
@@ -80,11 +80,7 @@ class Produit
     }
 
     public function insertProduit() {
-        /* $sql = "INSERT INTO t_d_produit ( Taux_TVA, Nom_Long, Nom_court, Ref_fournisseur, 
-        Photo, Prix_Achat, Id_Fournisseur, Id_Categorie) VALUES (:tauxtva,:nomlong,:nomcourt,
-         :reference, :photo, :prix,:fournisseur,:categorie)";*/
-
-        //     
+        
         $values = array(
             'Taux_TVA' => $this->Taux_TVA,
             'Nom_Long' => $this->Nom_Long,

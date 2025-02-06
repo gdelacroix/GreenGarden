@@ -1,4 +1,4 @@
-<?php include 'include/header.php' ?>
+<?php include '../include/header.php' ?>
 <?php
 
 
@@ -67,4 +67,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<p class="mt-3 text-center">Déjà inscrit ? <a href="login.php">Se connecter</a></p>
     </div>
 </div>
-<?php include 'include/footer.php' ?>
+<?php include '../include/footer.php' ?>

@@ -1,5 +1,10 @@
 <?php
- session_start(); // Démarrer la session
+// // Démarrage de la session
+// Ajoutez cette vérification pour éviter l'erreur
+if (session_status() === PHP_SESSION_NONE) {
+	// Démarrage de la session si elle n'est pas déjà active
+	session_start();
+}
 
 ?>
 <!DOCTYPE html>
@@ -99,15 +104,21 @@
                     </li>
                     <?php if ($isCommercialOrAdmin): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="Produit.php">Ajouter un produit</a>
+                            <!-- <a class="nav-link" href="Produit.php">Ajouter un produit</a> -->
+                            <a class="nav-link" href="index.php?action=manageProduit">Ajouter un produit</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Categories
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="Categories.php">Toutes les catégories</a></li>
-                                <li><a class="dropdown-item" href="Categorie.php">Ajouter une catégorie</a></li>
+                                <!-- <li><a class="dropdown-item" href="Categories.php">Toutes les catégories</a></li> -->
+                                <li><a class="dropdown-item" href="index.php?action=allCategories">Toutes les catégories</a></li>
+                                <li>
+                                    <!-- <a class="dropdown-item" href="Categorie.php">Ajouter une catégorie</a> -->
+                                    <a class="dropdown-item" href="index.php?action=manageCategorie">Ajouter une catégorie</a>
+                                </li>
+
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
