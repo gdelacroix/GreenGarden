@@ -9,7 +9,7 @@ Avant de lancer le projet, il est nécessaire d'initialiser la base de données.
 2. Exécutez le script `greengarden (1).sql` pour initialiser la structure et les données de la base.
 
 ### Utilisateurs de la base de données
-La base de données comporte plusieurs utilisateurs avec les identifiants suivants :
+La base de données comporte plusieurs utilisateurs pour l'accès à certaines  fonctionnalités de l'application avec les identifiants suivants (merci de vous connecter avec les login correspondants):
 
 | Nom d'utilisateur | Mot de passe |
 |------------------|-------------|
@@ -22,9 +22,14 @@ La base de données comporte plusieurs utilisateurs avec les identifiants suivan
 
 Chacun de ces utilisateurs a un mot de passe identique à son identifiant.
 
+### Spécificités de la base de données
+La base de données contient des tables et les données correspondantes mais aussi des fonctions et des triggers:
+1. Une fonction pour la génération d'un slug unique pour les produits et les catégories.
+2. Des triggers sur les tables commande, facture et expedition afin de générer des numéros autres que l'id, à communiquer au client.
+
 ## Configuration et démarrage
 1. Assurez-vous que votre serveur de base de données est actif et que la base `greengarden` est bien créée. Attention, l'utilisateur par défaut doit être `root` sans mot de passe.
-2. Configurez votre projet pour utiliser les identifiants de connexion correspondants.
+2. Configurez votre projet pour utiliser l''identifiant de connexion correspondants.
 3. Lancez votre projet et vérifiez que tout fonctionne correctement.
 
 ## Historique du développement
@@ -50,7 +55,7 @@ Chacun de ces utilisateurs a un mot de passe identique à son identifiant.
 **Commit:** `c70f89aea8bef552b95afced77eb8eabdde67d12`
 - Implémentation d'une architecture orientée objet.
 - Création d'une classe `dao` pour gérer les requêtes SQL.
-- Création des classes `Produit`, `Categorie` et `Fournisseur`.
+- Création des classes `Produit`, `Categorie` et `Fournisseur`. Il est important que les attributs de ces classes correspondent EXACTEMENT aux colonnes de tables de la base de ddonnées
 - Intégration de la POO dans les pages `index.php`, `Produit.php`, `Categorie.php` et `Commande.php`.
 
 ### Partie 5 - Mise en place MVC (Model View Controller)

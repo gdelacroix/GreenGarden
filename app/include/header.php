@@ -31,7 +31,9 @@ if (session_status() === PHP_SESSION_NONE) {
     }
 
     // Configuration de la base de données
-    $host = '127.0.0.1';
+    $host = getenv('DOCKER_ENV') === 'true' ? 'db' : '127.0.0.1';
+    
+    // $host = '127.0.0.1';
     $dbname = 'greengarden';
     $username = 'root';
     $password = '';

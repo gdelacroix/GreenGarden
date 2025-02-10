@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  app:
+  # on précise qu'on est dans un environnement docker pour activer les bonnes configurations notamment la connexion à la db
+    environment:
+      - DOCKER_ENV=true # On précise qu'on est dans un environnement docker
+    build:
+      context: ./app # On précise le dossier où se trouve le Dockerfile
+      dockerfile: Dockerfile  # On précise le fichier Dockerfile à utiliser
+    ports:
+      - "8081:80" # On expose le port 80 du container sur le port 8081 de la machine
+    volumes: # On monte les volumes pour que les fichiers soient accessibles dans le container
+      - ./app/public:/var/www/html
+      - ./app/images:/var/www/images
+      - ./app/include:/var/www/include
+      - ./app/config:/var/www/config
+      - ./app/require:/var/www/require
+      - ./app/app:/var/www/app
+      - ./config/apache.conf:/etc/apache2/sites-available/000-default.conf  # Ajout de la config Apache
+    depends_on: # On précise que le container app dépend du container db
+      - db
+  db: # On crée un container db
+    image: mysql:5.7
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: greengarden
+    volumes: # On monte le volume db_data pour que les données soient persistantes
+      - db_data:/var/lib/mysql
+      - ./scripts:/docker-entrypoint-initdb.d # On monte le dossier scripts pour que les scripts sql soient exécutés
+
+  phpmyadmin: # On crée un container phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: ""
+
+volumes:
+  db_data:

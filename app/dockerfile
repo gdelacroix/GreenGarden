@@ -1,0 +1,21 @@
+# Utiliser une image PHP avec Apache
+FROM php:apache
+
+# Activer PDO MySQL
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Définir le répertoire de travail (racine du site)
+WORKDIR /var/www/html
+
+# Copier uniquement le contenu du dossier public (index.php, CSS, JS, etc.)
+COPY ./public/ /var/www/html/
+
+# Copier les autres dossiers nécessaires au bon fonctionnement
+COPY ./include/ /var/www/include/
+COPY ./config/ /var/www/config/
+COPY ./require/ /var/www/require/
+COPY ./app/ /var/www/app/
+COPY ./images /var/www/images
+
+# Donner les bons droits aux fichiers
+RUN chown -R www-data:www-data /var/www/ && chmod -R 755 /var/www/

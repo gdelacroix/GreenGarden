@@ -65,7 +65,7 @@
             <input type="file"  class="form-control" name="photo" id="photo">
         <?php endif; ?>
         <?php if (null !== $produitData->getPhoto()): ?>
-            <p class="mt-2">Photo actuelle : <img src="../../../images/<?= htmlentities($produitData->getPhoto()) ?>" class="img-thumbnail" alt="Photo" style="width: 100px;"  onerror="this.onerror=null; this.src='../../../images/erreur.webp';"></p>
+            <p class="mt-2">Photo actuelle : <img src="../images/<?= htmlentities($produitData->getPhoto()) ?>" class="img-thumbnail" alt="Photo" style="width: 100px;"  onerror="this.onerror=null; this.src='../images/erreur.webp';"></p>
         <?php endif; ?>
     </div>
 

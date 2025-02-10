@@ -19,9 +19,9 @@
                 <div class="col-md-4 mb-4">
                     <a href="index.php?action=manageProduit&slug=<?= urlencode($product->getSlug()) ?>" class="text-decoration-none">
                         <div class="card">
-                            <img src="../../../images/<?= htmlentities($product->getPhoto()) ?>"
+                            <img src="../images/<?= htmlentities($product->getPhoto()) ?>"
                                 class="card-img-top" alt="<?= htmlentities($product->getNom_court()) ?>"
-                                style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.src='../../../images/erreur.webp';">
+                                style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.src='../images/erreur.webp';">
                             <div class="card-body">
                                 <h5 class="card-title"><?= htmlentities($product->getNom_court()) ?></h5>
                                 <p class="card-text"><strong>Catégorie :</strong>
