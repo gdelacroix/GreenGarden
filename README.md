@@ -62,6 +62,10 @@ La base de données contient des tables et les données correspondantes mais aus
 **Commit:** `acf18cd64cac2fe2cbaec6cab3134c64bf010e56`
 - Implémentation d'une architecture MVC pour la partie Produit, Categorie et Fournisseur.
 
+### Partie 6 - Mise en place containers Docker
+**Commit:** `3be3eae3fe1daeb94ae823daa34da91a673dac30`
+- Restructuration code pour conteneurisation via Dockerfile et Dockercompose
+
 ## Remarque
 Si vous rencontrez des problèmes de connexion à la base de données, assurez-vous que les utilisateurs et leurs mots de passe sont bien configurés et ont les permissions nécessaires sur la base `greengarden`.
 
